@@ -1,0 +1,27 @@
+/vendor
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/bootstrap/cache/*.php
+.env
+.env.*.local
+.phpunit.cache
+.phpunit.result.cache
+/.fleet
+/.idea
+/.vscode
+*.log
+.DS_Store
+Thumbs.db
+
+# Never commit the user's locally uploaded music or artwork.
+/storage/app/public/music/*
+!/storage/app/public/music/.gitkeep
+/storage/app/public/covers/*
+!/storage/app/public/covers/.gitkeep
