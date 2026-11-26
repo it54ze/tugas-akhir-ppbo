@@ -1,0 +1,14 @@
+@extends('layouts.app')
+@section('content')
+<section class="page-intro"><span class="eyebrow">BRING YOUR OWN SOUND</span><h1>Upload your <em>music.</em></h1><p>Local files only. Your collection, your rules.</p></section>
+<div class="upload-layout">
+    <form id="upload-form" class="upload-form" enctype="multipart/form-data">
+        <div class="form-heading"><span class="eyebrow">TRACK DETAILS</span><span class="required-note">* REQUIRED FIELDS</span></div>
+        <div class="form-grid"><label class="field"><span>SONG TITLE *</span><input type="text" name="title" required maxlength="150" placeholder="What's this track called?"></label><label class="field"><span>ARTIST NAME *</span><input type="text" name="artist" required maxlength="150" placeholder="Who made this sound?"></label><label class="field"><span>ALBUM NAME</span><input type="text" name="album" maxlength="150" placeholder="Album or EP (optional)"></label><label class="field"><span>GENRE</span><input type="text" name="genre" maxlength="80" placeholder="Indie, pop, electronic..."></label></div>
+        <div class="upload-drop" id="audio-drop"><input type="file" id="audio-file" name="audio" accept=".mp3,.wav,.ogg,audio/mpeg,audio/wav,audio/ogg" required hidden><div class="drop-icon">♫</div><strong>DROP YOUR TRACK HERE</strong><span>MP3, WAV OR OGG · MAX 64 MB</span><button type="button" class="button button-outline" id="browse-audio">BROWSE FILES</button><small id="audio-file-name">NO FILE SELECTED</small></div>
+        <div class="cover-upload-row"><label class="cover-preview" id="cover-preview"><span>＋</span><small>COVER ART</small></label><div class="cover-copy"><strong>GIVE IT SOME ARTWORK</strong><p>JPG, PNG or WEBP. Optional, up to 8 MB.</p><label class="button button-outline small-button" for="cover-file">CHOOSE COVER</label><input type="file" id="cover-file" name="cover" accept="image/jpeg,image/png,image/webp" hidden><small id="cover-file-name">No cover selected</small></div></div>
+        <div class="upload-footer"><p>By uploading, you confirm these files are stored on this device.</p><button class="button button-pink" type="submit" id="upload-submit">UPLOAD TRACK <span>↗</span></button></div>
+    </form>
+    <aside class="upload-aside"><div class="aside-sticker upload-vibe-sticker"><span class="sticker-kicker">YOUR MUSIC. YOUR SPACE.</span><strong>OWN<br><em>THE VIBE.</em></strong><small>NO CLOUD.<br>NO LIMITS.<br>JUST YOU.</small><img class="upload-vibe-mascot" src="{{ asset('images/arcade/pixel-alien.webp') }}" alt="Pixel alien mascot" aria-hidden="true"></div><div class="format-note"><span class="eyebrow">SUPPORTED FORMATS</span><div><b>MP3</b><b>WAV</b><b>OGG</b></div><p>Files are saved locally in Laravel storage and can be played directly in your browser.</p></div></aside>
+</div>
+@endsection
