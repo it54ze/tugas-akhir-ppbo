@@ -1,64 +1,101 @@
-# VYBETIFY — Local Music Player
+# VYBETIFY — Pemutar Musik Lokal
 
-VYBETIFY is a local music library and browser-based player built with **Laravel 13**, PHP 8.3+, MySQL, Blade, CSS, and vanilla JavaScript. It is inspired by a 90s pixel interface and a controlled neon-party palette.
+VYBETIFY adalah pustaka musik lokal sekaligus pemutar musik berbasis browser yang dibangun dengan **Laravel 13**, PHP 8.3+, MySQL, Blade, CSS, dan JavaScript murni (vanilla). Tampilannya terinspirasi antarmuka piksel ala 90-an dengan palet warna neon yang tetap terkontrol.
 
-> This repository contains application source code. Install Composer dependencies on your computer before running Laravel. The current archive does not bundle `vendor/` or Node modules.
+Proyek ini dibuat sebagai **Tugas Akhir Pemrograman Berorientasi Objek (PBO)** dan mendemonstrasikan konsep PBO, prinsip SOLID, REST API, serta basis data relasional dalam satu aplikasi utuh.
 
-## What it does
+> Repository ini hanya berisi kode sumber aplikasi. Folder `vendor/` dan `node_modules/` tidak disertakan, jadi dependensi Composer harus dipasang dulu sebelum aplikasi dijalankan.
 
-- Upload real MP3, WAV, and OGG files from your computer (64 MB maximum by default).
-- Optionally upload JPG, JPEG, PNG, or WEBP cover art for songs and playlists (8 MB maximum).
-- Store media in Laravel's local public storage and song metadata in MySQL.
-- Play, pause, resume, seek, change volume, mute, previous/next, shuffle, and repeat.
-- Keep the single HTML5 audio element alive while app pages change through fetch-based navigation.
-- Browse the library, switch Grid/List view, and search by title, artist, album, or genre.
-- Create, edit, delete, and play playlists; add or remove tracks.
-- Save liked songs and recently played tracks.
-- Delete a song's database relationships and its audio/cover files.
-- Start with an empty database. There are no seeded songs, albums, artists, or playlists.
+## Daftar Isi
 
-## Requirements
+- [Fitur](#fitur)
+- [Teknologi](#teknologi)
+- [Prasyarat](#prasyarat)
+- [Instalasi dan Menjalankan Aplikasi](#instalasi-dan-menjalankan-aplikasi)
+- [Pengaturan Ukuran Upload](#pengaturan-ukuran-upload)
+- [Struktur Proyek](#struktur-proyek)
+- [Penerapan PBO dan SOLID](#penerapan-pbo-dan-solid)
+- [REST API](#rest-api)
+- [Database](#database)
+- [Pengujian](#pengujian)
+- [Alur Kerja Git dan GitHub](#alur-kerja-git-dan-github)
+- [Tim Pengembang](#tim-pengembang)
+- [Keterbatasan](#keterbatasan)
+- [Arah Desain](#arah-desain)
 
-- PHP **8.3 or newer** (Laravel 13 requirement).
+## Fitur
+
+- Upload file audio **MP3, WAV, dan OGG** langsung dari komputer (maksimal 64 MB secara default).
+- Upload cover opsional (**JPG, JPEG, PNG, atau WEBP**, maksimal 8 MB) untuk lagu maupun playlist.
+- File media disimpan di public storage Laravel, sedangkan metadata lagu disimpan di MySQL.
+- Kontrol pemutaran lengkap: play, pause, lanjut, seek, atur volume, mute, sebelumnya/berikutnya, shuffle, dan repeat.
+- Satu elemen HTML5 audio tetap hidup saat pindah halaman (navigasi berbasis `fetch`), jadi musik tidak terputus.
+- Jelajahi pustaka dengan tampilan Grid/List, lalu cari berdasarkan judul, artis, album, atau genre.
+- Buat, ubah, hapus, dan putar playlist, serta tambah atau hapus lagu di dalamnya.
+- Simpan lagu favorit (liked songs) dan riwayat lagu yang baru diputar.
+- Hapus lagu sekaligus relasi di database dan file audio/cover-nya.
+- Database dimulai dalam keadaan kosong: tidak ada lagu, album, artis, atau playlist bawaan.
+
+## Teknologi
+
+| Bagian | Teknologi |
+|---|---|
+| Backend | PHP 8.3+, Laravel 13 |
+| Database | MySQL 8+ (atau MariaDB yang kompatibel) |
+| Frontend | Blade, CSS, JavaScript vanilla |
+| Pengujian | PHPUnit 12 (SQLite in-memory saat tes) |
+| Lingkungan lokal | Laragon (Windows) |
+
+## Prasyarat
+
+- PHP **8.3 atau lebih baru** (syarat Laravel 13).
 - Composer 2.
-- MySQL 8+ or a compatible MariaDB version.
-- PHP extensions required by Laravel, including Ctype, cURL, DOM, Fileinfo, Filter, Hash, Mbstring, OpenSSL, PCRE, PDO, Session, Tokenizer, and XML.
-- Laragon with a PHP 8.3+ version selected.
+- MySQL 8+ atau MariaDB yang kompatibel.
+- Ekstensi PHP yang dibutuhkan Laravel: Ctype, cURL, DOM, Fileinfo, Filter, Hash, Mbstring, OpenSSL, PCRE, PDO, Session, Tokenizer, dan XML.
+- Untuk menjalankan tes: ekstensi `pdo_sqlite`.
+- Laragon dengan PHP 8.3+ yang sudah dipilih (jika memakai Windows).
 
-Check in Laragon Terminal:
+Cek versi lewat Laragon Terminal:
 
 ```bash
 php -v
 composer --version
 ```
 
-If PHP is below 8.3, switch Laragon to a PHP 8.3+ build before installing dependencies.
+Kalau versi PHP masih di bawah 8.3, ganti dulu ke PHP 8.3+ di Laragon sebelum memasang dependensi.
 
-## Run on Laragon (Windows)
+## Instalasi dan Menjalankan Aplikasi
 
-1. Extract this project into `C:\laragon\www\vybetify-laravel`.
-2. Start MySQL from Laragon. Apache is optional when using `php artisan serve`.
-3. Open Laragon Terminal and enter the project directory:
+### Di Laragon (Windows)
+
+1. Clone repository ke folder `www` milik Laragon:
 
    ```bash
-   cd C:\laragon\www\vybetify-laravel
+   cd C:\laragon\www
+   git clone https://github.com/it54ze/tugas-akhir-ppbo.git
+   cd tugas-akhir-ppbo
    ```
 
-4. Install the Laravel packages:
+   Kalau kamu mendapatkan proyek ini sebagai file ZIP, ekstrak saja ke `C:\laragon\www\tugas-akhir-ppbo`.
+
+2. Nyalakan **MySQL** dari Laragon. Apache tidak wajib kalau kamu memakai `php artisan serve`.
+
+3. Pasang dependensi Laravel:
 
    ```bash
    composer install
    ```
 
-5. Create the environment file and application key:
+4. Buat file environment dan application key:
 
    ```bash
    copy .env.example .env
    php artisan key:generate
    ```
 
-6. Open phpMyAdmin and create an empty database named `vybetify_db` using `utf8mb4` / `utf8mb4_unicode_ci`.
-7. Check `.env` database settings. The default is:
+5. Buka phpMyAdmin, lalu buat database kosong bernama `vybetify_db` dengan collation `utf8mb4_unicode_ci`.
+
+6. Periksa pengaturan database di `.env`. Nilai bawaannya:
 
    ```dotenv
    DB_CONNECTION=mysql
@@ -69,27 +106,45 @@ If PHP is below 8.3, switch Laragon to a PHP 8.3+ build before installing depend
    DB_PASSWORD=
    ```
 
-   Set `DB_PASSWORD` if your local MySQL root account has a password.
+   Isi `DB_PASSWORD` kalau akun root MySQL kamu memakai password.
 
-8. Run migrations and create the public storage link:
+7. Jalankan migrasi dan buat symbolic link untuk public storage:
 
    ```bash
    php artisan migrate
    php artisan storage:link
    ```
 
-9. Start the Laravel development server:
+8. Jalankan server pengembangan:
 
    ```bash
    php artisan serve
    ```
 
-10. Open **http://127.0.0.1:8000**.
-11. Choose **Upload Music**, select a real audio file, complete the required title and artist fields, and upload it. The new track should appear in Your Library and become playable.
+9. Buka **http://127.0.0.1:8000** di browser.
 
-### Upload size settings
+10. Pilih **Upload Music**, pilih file audio asli, isi judul dan artis (wajib), lalu upload. Lagu baru akan muncul di **Your Library** dan siap diputar.
 
-The default application validation limits are 64 MB for audio and 8 MB for cover images. They can be changed with `VYBETIFY_AUDIO_MAX_KB` and `VYBETIFY_COVER_MAX_KB` in `.env`. PHP must allow the request body to be slightly larger than the audio limit. In the active `php.ini` used by Laragon, adjust for example:
+### Jalan pintas (opsional)
+
+Composer menyediakan skrip `setup` yang menjalankan `composer install`, menyalin `.env.example` ke `.env`, membuat application key, dan menjalankan migrasi:
+
+```bash
+composer run setup
+```
+
+Database `vybetify_db` tetap harus dibuat lebih dulu, dan `php artisan storage:link` tetap dijalankan manual.
+
+## Pengaturan Ukuran Upload
+
+Batas validasi bawaan aplikasi adalah 64 MB untuk audio dan 8 MB untuk cover. Keduanya bisa diubah lewat `.env`:
+
+```dotenv
+VYBETIFY_AUDIO_MAX_KB=65536
+VYBETIFY_COVER_MAX_KB=8192
+```
+
+PHP juga harus mengizinkan ukuran request sedikit lebih besar daripada batas audio. Ubah di `php.ini` yang aktif di Laragon, misalnya:
 
 ```ini
 upload_max_filesize = 64M
@@ -97,126 +152,183 @@ post_max_size = 70M
 max_file_uploads = 20
 ```
 
-Restart Apache / the terminal PHP process after changing PHP configuration. The effective upload limit is the smallest value among PHP, web server, and Laravel validation settings.
+Restart Apache atau proses PHP di terminal setelah mengubah konfigurasi PHP. Batas upload yang berlaku adalah **nilai terkecil** di antara pengaturan PHP, web server, dan validasi Laravel.
 
-## Project structure
+## Struktur Proyek
 
 ```text
-vybetify-laravel/
+tugas-akhir-ppbo/
 ├── app/
-│   ├── Contracts/                 # Storage interfaces
-│   ├── Data/                      # Encapsulated song metadata value object
+│   ├── Contracts/                 # Interface storage (Audio, Cover, File)
+│   ├── Data/                      # Value object SongMetadata (encapsulation)
 │   ├── Http/
-│   │   ├── Controllers/            # Web and REST API controllers
-│   │   ├── Requests/               # Input validation
-│   │   └── Resources/              # JSON response transformation
-│   ├── Models/                     # Eloquent models
-│   ├── Providers/                  # Dependency bindings
-│   └── Services/                   # Use-cases and storage implementations
-├── bootstrap/                      # Laravel application bootstrap
-├── config/                         # App, DB, filesystem, session config
+│   │   ├── Controllers/           # Controller web dan REST API
+│   │   ├── Requests/              # Validasi input (Form Request)
+│   │   └── Resources/             # Transformasi respons JSON
+│   ├── Models/                    # Model Eloquent
+│   ├── Providers/                 # Binding dependency (AppServiceProvider)
+│   └── Services/                  # Use-case dan implementasi storage
+│       └── Storage/               # AbstractLocalMediaStorage + implementasi lokal
+├── bootstrap/                     # Bootstrap aplikasi Laravel
+├── config/                        # Konfigurasi app, database, filesystem, vybetify
 ├── database/
-│   ├── migrations/                 # Relational database schema
-│   └── seeders/                    # Intentionally empty
+│   ├── factories/                 # Factory untuk Song dan Playlist
+│   ├── migrations/                # Skema database relasional
+│   └── seeders/                   # Sengaja kosong
+├── docs/                          # Catatan PBO, SOLID, database, dan REST API
 ├── public/
 │   ├── css/app.css
-│   └── js/app.js
-├── resources/views/                # Blade pages and shared UI components
+│   ├── js/app.js
+│   └── images/                    # Aset branding dan ilustrasi arcade
+├── resources/views/               # Halaman Blade dan komponen partial
+│   ├── layouts/
+│   ├── pages/
+│   └── partials/                  # player, sidebar, song-card
 ├── routes/
-│   ├── api.php                     # REST API routes, auto-prefixed /api
-│   └── web.php                     # Browser routes
+│   ├── api.php                    # Route REST API (otomatis berprefiks /api)
+│   └── web.php                    # Route halaman browser
 ├── storage/app/public/
-│   ├── music/                      # Uploaded audio files
-│   └── covers/                     # Uploaded cover art
-├── docs/                           # PBO, SOLID, database, and API explanation
-├── .github/workflows/               # GitHub Actions tests
-└── tests/                           # Feature tests
+│   ├── music/                     # File audio hasil upload
+│   └── covers/                    # File cover hasil upload
+└── tests/Feature/                 # Feature test
 ```
 
-## Object-oriented programming and SOLID mapping
+Penjelasan lebih detail ada di [`docs/pbo-solid-rest-api.md`](docs/pbo-solid-rest-api.md).
 
-The code is structured to demonstrate the required object-oriented concepts rather than placing the application logic in one large controller.
+## Penerapan PBO dan SOLID
 
-| Requirement | Where it is applied | Explanation |
+Kode disusun untuk memperlihatkan konsep PBO yang dipersyaratkan, bukan menumpuk seluruh logika di satu controller besar.
+
+| Konsep | Lokasi penerapan | Penjelasan |
 |---|---|---|
-| Abstraction | `AbstractLocalMediaStorage`, `SongMetadata`, and storage contracts | Common media-storage behavior is defined behind an abstract class and interfaces. |
-| Inheritance | `LocalAudioStorage` and `LocalCoverStorage` | Both concrete storage classes inherit shared file-handling behavior from `AbstractLocalMediaStorage`. |
-| Encapsulation | Eloquent models, service dependencies, and `private readonly` properties | Class state and service dependencies are kept behind class methods and visibility boundaries. |
-| Polymorphism | `UploadSongService::storeFile(FileStorageInterface ...)` and the `AudioStorageInterface` / `CoverStorageInterface` bindings | The upload/delete use-cases call contract methods without depending on concrete storage classes. The implementation can be replaced without rewriting the use-case. |
-| Single Responsibility | Controllers, Form Requests, Resources, and Services | Controllers handle HTTP flow; requests validate; resources serialize; services perform application use-cases and file storage. |
-| Open/Closed | Storage contracts and implementations | A new storage implementation can be introduced and bound without changing upload service logic. |
-| Liskov Substitution | `LocalAudioStorage` and `LocalCoverStorage` | Each subclass honors the shared storage contract inherited from the abstract base class. |
-| Interface Segregation | `AudioStorageInterface`, `CoverStorageInterface`, `FileStorageInterface` | Consumers depend on small, relevant file-storage contracts instead of a broad unrelated interface. |
-| Dependency Inversion | `UploadSongService`, `SavePlaylistService`, and `DeleteSongService` | High-level use-cases depend on interfaces; `AppServiceProvider` maps them to local storage implementations. |
+| Abstraction | `AbstractLocalMediaStorage`, `SongMetadata`, dan kontrak storage | Perilaku umum penyimpanan media didefinisikan di balik abstract class dan interface. |
+| Inheritance | `LocalAudioStorage` dan `LocalCoverStorage` | Kedua kelas storage mewarisi logika penanganan file dari `AbstractLocalMediaStorage`. |
+| Encapsulation | Model Eloquent, dependency service, dan properti `private readonly` | State kelas dan dependency service disimpan di balik method dan batas visibilitas. |
+| Polymorphism | `UploadSongService::storeFile(FileStorageInterface ...)` serta binding `AudioStorageInterface` / `CoverStorageInterface` | Use-case upload dan hapus memanggil method kontrak tanpa bergantung pada kelas konkret, sehingga implementasi bisa diganti tanpa menulis ulang use-case. |
+| Single Responsibility | Controller, Form Request, Resource, dan Service | Controller mengatur alur HTTP, request memvalidasi, resource menyusun JSON, service menjalankan use-case dan penyimpanan file. |
+| Open/Closed | Kontrak dan implementasi storage | Implementasi storage baru bisa ditambahkan dan di-bind tanpa mengubah logika service upload. |
+| Liskov Substitution | `LocalAudioStorage` dan `LocalCoverStorage` | Setiap subclass memenuhi kontrak storage yang diwarisi dari abstract class. |
+| Interface Segregation | `AudioStorageInterface`, `CoverStorageInterface`, `FileStorageInterface` | Pemakai hanya bergantung pada kontrak storage yang relevan, bukan satu interface besar yang tidak terkait. |
+| Dependency Inversion | `UploadSongService`, `SavePlaylistService`, dan `DeleteSongService` | Use-case tingkat tinggi bergantung pada interface, lalu `AppServiceProvider` memetakannya ke implementasi storage lokal. |
 
 ## REST API
 
-The browser interface uses the REST endpoints below. JSON responses for collections and single records are transformed with Laravel API Resources.
+Antarmuka browser memakai endpoint di bawah ini. Respons koleksi maupun data tunggal ditransformasi dengan Laravel API Resource.
 
-| Method | Endpoint | Purpose |
+| Method | Endpoint | Fungsi |
 |---|---|---|
-| GET | `/api/songs` | List songs; supports `?search=` and `?ids=1,2,3` |
-| POST | `/api/songs` | Upload a song (`multipart/form-data`) |
-| GET | `/api/songs/{id}` | Get song information |
-| DELETE | `/api/songs/{id}` | Delete song and stored files |
-| GET | `/api/playlists` | List playlists |
-| POST | `/api/playlists` | Create playlist (multipart form data; optional `cover`) |
-| GET | `/api/playlists/{id}` | Get playlist and its songs |
-| PUT/PATCH | `/api/playlists/{id}` | Update playlist name/description |
-| DELETE | `/api/playlists/{id}` | Delete a playlist and its cover (not its songs) |
-| POST | `/api/playlists/{id}/songs` | Add a song; JSON body: `{"song_id": 1}` |
-| DELETE | `/api/playlists/{id}/songs/{songId}` | Remove a song from a playlist |
-| GET | `/api/liked-songs` | List liked tracks |
-| PUT | `/api/songs/{id}/like` | Like a song |
-| DELETE | `/api/songs/{id}/like` | Unlike a song |
-| GET | `/api/recently-played` | List recently played songs |
-| POST | `/api/songs/{id}/play` | Record a successful playback start |
+| GET | `/api/songs` | Daftar lagu; mendukung `?search=` dan `?ids=1,2,3` |
+| POST | `/api/songs` | Upload lagu (`multipart/form-data`) |
+| GET | `/api/songs/{id}` | Detail lagu |
+| DELETE | `/api/songs/{id}` | Hapus lagu beserta file tersimpannya |
+| GET | `/api/playlists` | Daftar playlist |
+| POST | `/api/playlists` | Buat playlist (multipart; `cover` opsional) |
+| GET | `/api/playlists/{id}` | Detail playlist beserta lagunya |
+| PUT/PATCH | `/api/playlists/{id}` | Ubah nama/deskripsi playlist |
+| DELETE | `/api/playlists/{id}` | Hapus playlist beserta cover-nya (lagu tidak ikut terhapus) |
+| POST | `/api/playlists/{id}/songs` | Tambah lagu; body JSON: `{"song_id": 1}` |
+| DELETE | `/api/playlists/{id}/songs` | Hapus beberapa lagu sekaligus dari playlist; body JSON: `{"song_ids": [1, 2]}` |
+| DELETE | `/api/playlists/{id}/songs/{songId}` | Hapus satu lagu dari playlist |
+| GET | `/api/liked-songs` | Daftar lagu yang disukai |
+| PUT | `/api/songs/{id}/like` | Sukai lagu |
+| DELETE | `/api/songs/{id}/like` | Batalkan suka |
+| GET | `/api/recently-played` | Daftar lagu yang baru diputar |
+| POST | `/api/songs/{id}/play` | Catat lagu yang berhasil mulai diputar |
 
-### Database tables
+### Aturan validasi
 
-- `songs`: uploaded track metadata and stored file paths.
-- `playlists`: user-created playlist information and optional cover path.
-- `playlist_song`: many-to-many playlist/song relationship.
-- `liked_songs`: favorite song references.
-- `recently_played`: playback history records.
+| Field | Aturan |
+|---|---|
+| `title`, `artist` | wajib, maksimal 150 karakter |
+| `album` | opsional, maksimal 150 karakter |
+| `genre` | opsional, maksimal 80 karakter |
+| `duration` | opsional, numerik, minimal 0 |
+| `audio` | wajib, MIME MP3/WAV/OGG, ukuran sesuai `VYBETIFY_AUDIO_MAX_KB` |
+| `cover` | opsional, gambar JPG/JPEG/PNG/WEBP, ukuran sesuai `VYBETIFY_COVER_MAX_KB` |
+| Playlist `name` | wajib, maksimal 100 karakter |
+| Playlist `description` | opsional, maksimal 500 karakter |
 
-Foreign keys cascade when songs are deleted so a removed song is also removed from playlists, likes, and history. No user/account table is required for this single-user local application.
+## Database
 
-## Git and GitHub workflow
+Skema dibangun lewat migration Laravel di `database/migrations`.
 
-The source includes `.gitignore` and a GitHub Actions workflow at `.github/workflows/tests.yml`. It excludes `.env`, dependencies, cache, and uploaded private/local music files. To track the project and connect it to a new GitHub repository, create an empty repository on GitHub (do not add a README there), then run from the project folder:
+| Tabel | Isi |
+|---|---|
+| `songs` | Metadata lagu serta lokasi file audio dan cover |
+| `playlists` | Nama, deskripsi, dan lokasi cover playlist |
+| `playlist_song` | Relasi many-to-many antara playlist dan lagu |
+| `liked_songs` | Referensi lagu favorit (satu lagu hanya bisa disukai sekali) |
+| `recently_played` | Riwayat pemutaran lagu |
+
+Foreign key memakai **cascade delete**, jadi saat lagu dihapus, data lagu itu di playlist, daftar suka, dan riwayat ikut terhapus. Tidak ada tabel user karena aplikasi ini dirancang untuk satu pengguna di lingkungan lokal.
+
+## Pengujian
+
+Feature test ada di `tests/Feature` dan mencakup: halaman beranda, database awal tanpa data demo, upload/daftar/suka/hapus lagu, pembuatan playlist dan penambahan lagu, penghapusan lagu terpilih dari playlist tanpa menghapus lagu di pustaka, serta pencatatan riwayat putar.
 
 ```bash
-git init -b main
-git add .
-git commit -m "Initial VYBETIFY Laravel 13 project"
-git remote add origin https://github.com/USERNAME/vybetify-laravel.git
-git branch -M main
-git push -u origin main
+composer test
+# atau
+php artisan test
 ```
 
-Replace `USERNAME` with your GitHub username. Do not commit `.env`, passwords, API keys, or private music files. For normal development:
+Saat tes berjalan, aplikasi memakai **SQLite in-memory** (diatur di `phpunit.xml`), jadi MySQL tidak perlu aktif untuk menjalankan tes.
+
+Cek sintaks cepat:
 
 ```bash
-git status
-git add .
-git commit -m "Add VYBETIFY music player feature"
-git push
+php -l app/Http/Controllers/Api/SongController.php
+node --check public/js/app.js
 ```
 
-## Testing and limitations
+Hal-hal yang tetap perlu diuji manual di Laragon target: operasi MySQL sungguhan, decoding audio di browser, batas ukuran upload, dan perilaku pemutaran yang tidak terputus saat pindah halaman.
 
-- The repository includes homepage and REST API feature tests for empty initial data, upload, likes, deletion, and playlist operations. Run them after installing dependencies with `php artisan test`.
-- GitHub Actions runs the automated feature tests for commits and pull requests targeting `main`.
-- PHP syntax and JavaScript syntax can be checked with `php -l` and `node --check`.
-- Actual MySQL operations, browser audio decoding, file upload limits, and the browser's persistent playback behavior must be tested on the target Laragon installation.
-- Google Fonts are loaded from Google Fonts when internet access is available; system fallback fonts are included.
-- This project is intended for a single-user local environment. Do not expose the app publicly without adding authentication, authorization, rate limiting, and production hardening.
+## Alur Kerja Git dan GitHub
 
-## Design direction
+Repository: <https://github.com/it54ze/tugas-akhir-ppbo>
 
-- Midnight Cosmos `#0A0D16` as the base.
-- Electric Blue `#2F55F5`, Luminous Lime `#39E34A`, Neon Fuchsia `#FF2DAA`, Vivid Tangerine `#FF5622`, and Cosmic Yellow `#FFF20A` as restrained accents.
-- Pixel-grid hero panel and geometric motifs inspired by the retro welcome screen.
-- Neon-party energy without making every component glow.
-- `Archivo Black` for expressive headings, a limited `Press Start 2P` accent for pixel HUD labels, and `Space Grotesk` for legible interface text.
+`.gitignore` sudah mengecualikan `.env`, `vendor/`, `node_modules/`, cache, log, serta file musik dan cover yang diupload secara lokal (folder `.gitkeep` tetap dilacak).
+
+Alur kerja tim yang dipakai: setiap bagian dikerjakan di branch `feature/...`, lalu digabung ke `main` lewat Pull Request.
+
+```bash
+git checkout -b feature/nama-fitur
+git add .
+git commit -m "feat: deskripsi singkat perubahan"
+git push -u origin feature/nama-fitur
+```
+
+Setelah itu buka Pull Request di GitHub dan minta review sebelum merge ke `main`. Jangan pernah commit `.env`, password, API key, atau file musik pribadi.
+
+## Tim Pengembang
+
+Pembagian kerja berdasarkan riwayat commit dan Pull Request di repository:
+
+| Bagian | Branch / PR | Akun GitHub |
+|---|---|---|
+| Fondasi Laravel dan routing | commit awal | `it54ze` |
+| Storage layer (contracts, metadata, storage lokal) | `feature/storage-layer` | `kodingannya-ipi` |
+| Migration, model, dan factory | `feature/database-models` | `cikiverse` |
+| Song API | `feature/song-api` | `riri` |
+| Playlist API | `feature/playlist-api` | `Lylies` |
+| Liked, recently played, dan tes | `feature/liked-recent-tests` | `mllyeee` |
+| Tampilan frontend (halaman, player, sidebar, song-card) | `feature/frontend-views` | `dimid` |
+| Review dan merge Pull Request | semua PR | `Erzsa` |
+
+## Keterbatasan
+
+- Aplikasi ditujukan untuk **satu pengguna di lingkungan lokal**. Jangan dipublikasikan ke internet tanpa menambahkan autentikasi, otorisasi, rate limiting, dan hardening produksi.
+- Tidak ada konfigurasi CI (GitHub Actions) di repository saat ini, jadi tes dijalankan manual.
+- Google Fonts dimuat dari internet jika tersedia; jika offline, font bawaan sistem dipakai sebagai cadangan.
+
+## Arah Desain
+
+- **Midnight Cosmos** `#0A0D16` sebagai warna dasar.
+- Aksen terbatas: Electric Blue `#2F55F5`, Luminous Lime `#39E34A`, Neon Fuchsia `#FF2DAA`, Vivid Tangerine `#FF5622`, dan Cosmic Yellow `#FFF20A`.
+- Panel hero berpola grid piksel dan motif geometris yang terinspirasi layar sambutan retro.
+- Nuansa pesta neon tanpa membuat setiap komponen menyala.
+- `Archivo Black` untuk judul ekspresif, `Press Start 2P` secukupnya untuk label bergaya HUD piksel, dan `Space Grotesk` untuk teks antarmuka yang mudah dibaca.
+
+## Lisensi
+
+MIT (sesuai `composer.json`).
