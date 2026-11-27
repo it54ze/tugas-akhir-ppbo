@@ -8,6 +8,7 @@ use App\Http\Resources\PlaylistResource;
 use App\Models\Playlist;
 use App\Models\Song;
 use App\Services\DeletePlaylistService;
+use App\Services\RemovePlaylistSongsService;
 use App\Services\SavePlaylistService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -64,6 +65,27 @@ class PlaylistController extends Controller
                 'song_id' => $songId,
                 'songs_count' => $playlist->songs()->count(),
                 'already_added' => $alreadyAdded,
+            ],
+        ]);
+    }
+
+    public function removeSongs(Request $request, Playlist $playlist, RemovePlaylistSongsService $service): JsonResponse
+    {
+        $validated = $request->validate([
+            'song_ids' => ['required', 'array', 'min:1'],
+            'song_ids.*' => ['required', 'integer', 'distinct', 'exists:songs,id'],
+        ]);
+
+        $removedCount = $service->execute($playlist, array_map('intval', $validated['song_ids']));
+
+        return response()->json([
+            'message' => $removedCount > 0
+                ? "{$removedCount} lagu berhasil dihapus dari playlist."
+                : 'Tidak ada lagu terpilih yang ada di playlist ini.',
+            'data' => [
+                'playlist_id' => $playlist->id,
+                'removed_count' => $removedCount,
+                'songs_count' => $playlist->songs()->count(),
             ],
         ]);
     }
